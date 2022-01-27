@@ -1,0 +1,46 @@
+/* ------------------homeのコンテンツ全体グリッド------------------ */
+.contents-home{
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-rows: 50% 50%;
+}
+/* ------------------タイトル部のアイコン------------------ */
+.icon {
+  width: 34px;
+  height: 34px;
+}
+/* ------------------コンソールエリア------------------ */
+.console {
+  width: 100%;
+  height: 100%;
+  /* 背景色 */
+  background: rgba(0,157,255,.2);
+  /* 横方向に中央寄せ */
+  text-align: center;
+  /* 子要素を縦中央寄せ */
+  position: relative;
+}
+.console #console {
+  /* 文字数に応じて上下左右に中央寄せ (余白20%) */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 80%;
+  height: 80%;
+  /* 文字を左寄せ */
+  text-align: left;
+  /* スクロール */
+  overflow: auto;
+}
+/* ------------------ボタンエリア------------------ */
+.btn-box-area {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(5, 1fr);
+}

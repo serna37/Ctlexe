@@ -1,0 +1,119 @@
+/* ------------------全体------------------ */
+.bg {
+  /* 背景 */
+  background: url("/src/component/img/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+  /* 固定 */
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  /* ポジション */
+  position: relative;
+  z-index: 0;
+  /* ブラー効果でボヤけた部分を非表示 */
+  overflow: hidden;
+}
+.bg:before {
+  /* 背景画像を継承する */
+  background: inherit;
+  content: '';
+  /* ブラー */
+  filter: blur(4px);
+  /* ポジション */
+  position: absolute;
+  z-index: -1;
+}
+.text {
+  /* フォント/文字色など */
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  text-shadow: 0 0 10px rgba(0,0,0,.4);
+  color: #fff;
+}
+.grid {
+  /* 全体のグリッドレイアウト */
+  display: grid;
+  grid-template-rows: 30% 70%;
+}
+
+/* ------------------タイトルエリア------------------ */
+.title {
+  width: 100%;
+  height: 100%;
+  /* 横方向に中央寄せ */
+  text-align: center;
+  /* 縦方向に中央寄せするためテーブルに */
+  display: table;
+}
+.title #title {
+  /* 縦方向に中央寄せ */
+  display: table-cell;
+  vertical-align: middle;
+  /* フォントサイズ */
+  font-size: 34px;
+}
+/* ------------------コンテンツエリア------------------ */
+.contents {
+  width: 100%;
+  height: 100%;
+  /* 横方向に中央寄せ */
+  text-align: center;
+  /* 子要素を縦中央寄せ */
+  position: relative;
+}
+.contents #contents {
+  /* 文字数に応じて上下左右に中央寄せ */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  /* 文字を中央寄せ */
+  text-align: center;
+}
+/* ------------------ボタン------------------ */
+.btn-box {
+  /* 子要素を中央に */
+  text-align: center;
+  /* 子要素を縦中央寄せ */
+  position: relative;
+}
+.btn {
+  /* 文字数に応じて上下左右に中央寄せ */
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  /* 文字を縦で中央寄せ */
+  line-height: 140px;
+  /* 背景/サイズ */
+  background: url("/src/component/img/btn.jpeg");
+  width: 150px;
+  height: 150px;
+  /* 円形に */
+  border-radius: 50%;
+}
+.btn:hover {
+  /* 回転 */
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  transform: rotate(360deg);
+  -webkit-transform: rotate(360deg);
+  /* マウスカーソルをポインター(指)に */
+  cursor: pointer;
+}
+.btn:active {
+  /* 収縮 */
+  transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+  transform: scale(0.5, 0.5);
+  -webkit-transform: scale(0.5, 0.5);
+}
