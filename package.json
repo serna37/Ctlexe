@@ -14,5 +14,8 @@
   },
   "dependencies": {
     "encoding-japanese": "^1.0.30"
+  },
+  "scripts": {
+    "start": "node server.js"
   }
 }
