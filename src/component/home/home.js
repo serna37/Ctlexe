@@ -2,15 +2,12 @@
 // ホーム画面をロード
 // ========================================
 import Forge from '/src/core/Forge.js'
-// import CMD from '/src/component/logic/CMD.js'
+import Obsidian from '/src/core/Obsidian.js'
+// import CMD from '/src/component/core/CMD.js'
 import BAT from '/src/component/logic/BAT.js'
 
 // タイトルを設定
-// let icon = document.createElement('img');
-// icon.className = 'icon';
-// icon.src = '/src/component/img/icon.jpg';
 document.querySelector('#title').innerHTML = ''; // 初期化
-// document.querySelector('#title').appendChild(icon);
 document.querySelector('#title')
   .appendChild(document.createTextNode('Ctl.exe'));
 
@@ -78,6 +75,7 @@ const TODO = {
   name: 'TODO',
   detail: '機能未作成です',
   func: () => {
+    let a = {};
     // sysout('NO FUNCTION');
 
 // open

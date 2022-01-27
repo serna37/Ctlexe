@@ -2,7 +2,7 @@
 // OPEN機能用画面をロード
 // ========================================
 import Forge from '/src/core/Forge.js'
-// import CMD from '/src/component/logic/CMD.js'
+// import CMD from '/src/component/core/CMD.js'
 import BAT from '/src/component/logic/BAT.js'
 
 // タイトルを設定

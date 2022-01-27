@@ -1,9 +1,9 @@
 {
   "name": "Ctl.exe",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "main": "src/index.html",
   "window": {
-    "icon": "src/component/img/bg.jpg",
+    "icon": "src/component/img/icon.jpeg",
     "width": 980,
     "height": 540,
     "transparent": true,
@@ -14,8 +14,5 @@
   },
   "dependencies": {
     "encoding-japanese": "^1.0.30"
-  },
-  "scripts": {
-    "start": "node server.js"
   }
 }
