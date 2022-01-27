@@ -1,0 +1,18 @@
+{
+  "name": "Ctl.exe",
+  "version": "0.2.1",
+  "main": "src/index.html",
+  "window": {
+    "icon": "src/component/img/bg.jpg",
+    "width": 980,
+    "height": 540,
+    "transparent": true,
+    "always-on-top": true,
+    "resizable": false,
+    "frame": false,
+    "toolbar": false
+  },
+  "dependencies": {
+    "encoding-japanese": "^1.0.30"
+  }
+}
