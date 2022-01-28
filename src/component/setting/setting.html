@@ -1,0 +1,36 @@
+<!DOCYTPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+  </head>
+  <body>
+    <!-- コンテンツエリア -->
+    <div class="contents-setting">
+      <div class="btn-box"><div id="setting-upd" class="btn">更新</div></div>
+      <div class="set-area">
+        <div>
+          linkフォルダ (OPNEボタンで開くフォルダたちのパス) ない場合作成します<br>
+          <input type="text" id="set-link"></input>
+        </div>
+        <div>
+          バックアップするフォルダパス (Cドライブ内) ない場合作成します<br>
+          <input type="text" id="set-bkfrom"></input>
+        </div>
+        <div>
+          バックアップ作成先 (Cドライブ内) ない場合作成します<br>
+          <input type="text" id="set-bkto"></input>
+        </div>
+        <div>
+          BKファイル名　ここの値_yyyy_mm_dd_ver1.zipを作成、同日ならverをあげる<br>
+          <input type="text" id="set-bkheader"></input>
+        </div>
+        <div>
+          BKファイルの転送先 (なければ作成, 無理なら転送しない)<br>
+          おすすめはG:\\マイドライブ\bk PC版GoogleDriveをDLすると使用可能<br>
+          <input type="text" id="set-sendto"></input>
+        </div>
+      </div>
+      <div class="btn-box"><div id="setting-back" class="btn">キャンセル</div></div>
+    </div>
+  </body>
+</html>

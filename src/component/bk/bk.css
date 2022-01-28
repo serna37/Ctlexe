@@ -61,15 +61,15 @@
 }
 /* 圧縮画面 */
 .compress {
-  background: url("/src/component/img/compress.gif");
+  background: url("../img/compress.gif");
   background-repeat: no-repeat;
   background-position: center;
   background-color: black;
-  animation: fadein 3s;
+  animation: fadein 2s;
 }
 /* 転送画面 */
 .transfar {
-  background: url("/src/component/img/send.gif");
+  background: url("../img/send.gif");
   background-repeat: no-repeat;
   background-position: center;
   background-color: black;

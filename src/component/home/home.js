@@ -2,19 +2,31 @@
 // ホーム画面をロード
 // ========================================
 import Forge from '../../core/Forge.js'
-import Obsidian from '../../core/Obsidian.js'
-// import CMD from '/src/component/core/CMD.js'
-import BAT from '../logic/BAT.js'
+import CMD from '../../core/CMD.js'
+import Fsys from '../../core/Fsys.js'
+
+// exeファイルのあるディレクトリを取得
+const chdir = CMD.cmdSync('chdir').replace(/\r\n/g, '');
+
+// package.json
+const packDict = JSON.parse(
+  Fsys.read(`${chdir}\\package.json`)
+  .replace(/\r\n/g, ''));
+
+// config.json
+const cfDict = JSON.parse(
+  Fsys.read(`${chdir}\\src\\config.json`)
+  .replace(/\r\n/g, ''));
 
 // タイトルを設定
 document.querySelector('#title').innerHTML = ''; // 初期化
 document.querySelector('#title')
-  .appendChild(document.createTextNode('Ctl.exe'));
+  .appendChild(document.createTextNode(packDict['name']));
 
 // コンテンツ部
 // コンソール部分に出力 (改行コードを考慮)
 const sysout = v => document.querySelector('#console').innerHTML
-  = v.replace(/\n/g, '<br>');
+  = v.replace(/\r\n/g, '<br>');
 
 // ボタンに機能登録
 const registBtn = def => {
@@ -28,250 +40,110 @@ const registBtn = def => {
 const EXIT = {
   idx: 1,
   name: 'EXIT',
-  detail: 'Ctl.exeシステムを終了します',
+  detail: `${packDict['name']}システムを終了します`,
   func: () => {
     sysout('終了中...');
     setTimeout(() => window.close(), 500);
   }
 };
 
+const linkf = cfDict['link'];
+const elinkf = Fsys.existance(linkf);
 const OPEN = {
   idx: 2,
   name: 'OPEN',
-  detail: 'linkフォルダ「C\\\\Users\\ユーザ名\\Documents\\World\\link\\」の\
+  detail: elinkf
+  ? `linkフォルダ「${linkf}」の\
   <br>配下のフォルダを選択します\
-  <br>選択したフォルダの配下1階層を、全て開きます',
+  <br>選択したフォルダの配下1階層を、全て開きます`
+  : 'linkフォルダが未設定です。設定画面から設定してください(押下で設定画面を開きます)',
   func: () => {
-    Forge.load('contents', 'open');
+    if (elinkf) {
+      Forge.load('contents', 'open');
+    } else {
+      Forge.load('contents', 'setting');
+    }
   }
 };
 
 const LINK = {
   idx: 3,
   name: 'LINK',
-  detail: 'linkフォルダ「C\\\\Users\\ユーザ名\\Documents\\World\\link\\」を\
+  detail: elinkf
+  ? `linkフォルダ「${linkf}」を\
   <br>エクスプローラで開きます\
-  <br>OPENボタンの読込み対象となるファイルを編集できます',
+  <br>OPENボタンの読込み対象となるファイルを編集できます`
+  : 'linkフォルダが未設定です。設定画面から設定してください(押下で設定画面を開きます)',
   func: () => {
-    // CMD.cmdParallel(BAT.LINK_EXPLORER);
+    if (elinkf) {
+      CMD.cmdParallel(`start ${cfDict['link']}`);
+    } else {
+      Forge.load('contents', 'setting');
+    }
   }
 };
 
+const bkf = cfDict['bkfrom'];
+const bkt = cfDict['bkto'];
+const bkst = cfDict['sendto'];
+const ebkf = Fsys.existance(bkf);
+const ebkt = Fsys.existance(bkt);
+const ebkst = Fsys.existance(bkst);
+let bkDetail = '';
+if (ebkf && ebkt && ebkst) {
+  bkDetail = `BK対象フォルダ「${bkf}」を\
+      <br>BK先フォルダ「${bkt}」にコピー&圧縮します\
+      <br>転送先フォルダ「${bkst}」にバックアップします。\
+      <br>コピー→圧縮→転送`;
+} else if (ebkf && ebkt) {
+  bkDetail = `BK対象フォルダ「${bkf}」を\
+      <br>BK先フォルダ「${bkt}」にコピー&圧縮します\
+      <br>[INFO] 転送先フォルダが未設定です。設定画面から登録できます。\
+      <br>コピー→圧縮`;
+} else {
+  bkDetail = 'BKフォルダが未設定です。設定画面から設定してください(押下で設定画面を開きます)';
+}
 const BK = {
   idx: 4,
   name: 'BK',
-  detail: 'Worldフォルダ「C\\\\Users\\ユーザ名\\Documents\\World」を\
-  <br>Giftフォルダ「C\\\\Users\\ユーザ名\\Documents\\Gift」\
-  <br>にバックアップします',
+  detail: bkDetail,
   func: () => {
-    document.querySelector('#title').innerHTML = '準備中...';
-    sysout('準備中...')
-    // Forge.load('contents', 'bk');
+    if (!ebkf || !ebkt) {
+      Forge.load('contents', 'setting');
+    } else {
+      document.querySelector('#title').innerHTML = '準備中...';
+      sysout('準備中...')
+      Forge.load('contents', 'bk');
+    }
   }
 };
 
-const TODO = {
+const SETTING = {
   idx: 5,
-  name: 'TODO',
-  detail: '機能未作成です',
+  name: '設定',
+  detail: '操作対象のフォルダを設定します。',
   func: () => {
-    // sysout('NO FUNCTION');
-    // POST メソッドの実装の例
-// async function postData(url = '', data = {}) {
-  // 既定のオプションには * が付いています
-  // const response = fetch('https://www.google.com/search?q=検索', {
-    // method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    // mode: 'cors', // no-cors, *cors, same-origin
-    // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    // credentials: 'same-origin', // include, *same-origin, omit
-    // headers: {
-      // 'Content-Type': 'application/json'
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-    // },
-    // redirect: 'follow', // manual, *follow, error
-    // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    // body: JSON.stringify(data) // 本文のデータ型は "Content-Type" ヘッダーと一致させる必要があります
-  // })
-  // return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
-  // あとでAjaxに切り分けるよ
-  let json = {
-    id: 'test',
-    name: 'aa',
-    do: 'aa'
-  }
-  var url = "https://neras-sta.com/cgi-bin/text.py";
-      var method = "POST";
-      var headers = {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-      };
-      var body = JSON.stringify(json);
-      var mhb = {method, headers, body}
-  fetch(url, mhb)
-  // .then(res => console.log(res.text()))
-  .then(v => {
-    console.log(v)
-    return v
-  })
-  .then(res => res.json())
-  .then(v => {
-    console.log(v)
-    return v
-  })
-  .then(v => console.log(v))
-  // .then(data => JSON.parse(data))
-  // .then(res => console.log(this.responseText))
-  .catch(e => console.log(e));
-
-// 成功
-//   function reqListener () {
-//     // console.log(this)
-//     // console.log(window)
-//   console.log(this.responseText);
-// }
-//   var oReq = new XMLHttpRequest();
-// oReq.addEventListener("load", () => console.log(oReq.responseText));
-// oReq.open("GET", url);
-// oReq.send();
-
-// }
-
-// open
-// フォルダ一覧(ファイル除く)を取得
-// let path = "対象フォルダまでのパス";
-// File.dirList(path)
-
-// 配下ファイルを開く というか実行
-// let path = "対象フォルダまでのパス";
-// File.fList(path).forEach(f => CMD.cmdParallel(`start "${path}\\${f}"`));
-
-// エクスプローラで開く
-// let path = パスを取得;
-// CMD.cmdParallel(`start "${path}"`);
-
-// bk ===================================================
-// // フォルダ配下の、ファイル名一覧を取得 (新規bkファイル名を作る)
-// let path = bkおいとくパスを取得;
-// let bkHeader = バックアップファイル名ヘッダーを取得;
-// let target = バックアップ対象のファイルたちのパス;
-// let outerDrive = 外部保存するパス;
-//
-// File.dirList(path)
-// .forEach(V => File.delete(`${path}\\${v}`));// 作成途中フォルダ名→削除
-// let flist = File.fList(path).filter(v => v.startsWith(bkHeader));
-//
-// let now = new Date();
-// let yyyy = now.getFullYear();
-// let mm = now.getMonth() >= 9 ? now.getMonth() + 1 : `0${now.getMonth() + 1}`;
-// let dd = now.getDate();
-//
-// // 新規ヘッダ or 今日ど同日でない場合
-// let dirname = `${bkHeader}_${yyyy}_${mm}_${dd}_ver1`;
-//
-// // 同一ヘッダの場合
-// if (flist) {
-//   // 既存の最新バージョンを取得
-//   let lastZip = flist[flist.length - 1];
-//   let el = /(.+)_(.+)_(.+)_(.+)_ver(.+)\.zip/.exec(lastZip);// 作成済みの最新zipフォルダ
-//   // 今日と同日?
-//   if (el[2] == yyyy && el[3] == mm && el[4] == dd) {
-//     dirname = `${bkHeader}_${yyyy}_${mm}_${dd}_ver${Number(el[5]) + 1}`;
-//   }
-// }
-//
-// // フォルダを作成
-// File.mkdir(`${path}\\${dirname}`);
-// // コピー開始(非同期)
-// File.copyParallel(target, `${path}\\${dirname}`);
-//
-// // ファイル数をカウント
-// File.count(target)
-// File.count(`${path}\\${dirname}`) // ここ再帰
-//
-// // 圧縮アニメ
-// // 圧縮(同期)
-// // TODO
-// // 圧縮後にフォルダ削除
-// File.delete(`${path}\\${dirname}`)
-//
-// // フォルダ存在確認
-// if (File.existance(outerDrive)) {
-//   // あるなら転送
-//   File.copy(`${path}\\${dirname}.zip`, outerDrive);
-// }
-
-// ===================================================終了
-
-// setting jsonでやろう
-// ファイルの値取得
-// ファイルに書き込み(全上書き)
-
-
+    Forge.load('contents', 'setting');
   }
 };
 
-[EXIT, OPEN, LINK, BK, TODO].forEach(v => registBtn(v));
-
-// CMD.cmdParallel(BAT.ENV, sysout, sysout);
-// CMD.cmdParallel(BAT.WIN_ACT);
-
-
+[EXIT, OPEN, LINK, BK, SETTING].forEach(v => registBtn(v));
 
 // コナミコマンド
-let conami = 0;
+let order = 0;
+const command = ['ArrowUp', 'ArrowDown', 'ArrowUp', 'ArrowDown'
+, 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 document.onkeydown = e => {
-  let keyName = e.key;
-  if (conami == 0) {
-    if (keyName == 'ArrowUp') {
-      conami = 1;
-      setTimeout(() => {
-        conami = 0;
-      },3000);
-      return;
-    }
-  } else if (conami == 1) {
-    if (keyName == 'ArrowDown') {
-      conami = 2;
-      return;
-    }
-  } else if (conami == 2) {
-    if (keyName == 'ArrowUp') {
-      conami = 3;
-      return;
-    }
-  } else if (conami == 3) {
-    if (keyName == 'ArrowDown') {
-      conami = 4;
-      return;
-    }
-  } else if (conami == 4) {
-    if (keyName == 'ArrowLeft') {
-      conami = 5;
-      return;
-    }
-  } else if (conami == 5) {
-    if (keyName == 'ArrowRight') {
-      conami = 6;
-      return;
-    }
-  } else if (conami == 6) {
-    if (keyName == 'ArrowLeft') {
-      conami = 7;
-      return;
-    }
-  } else if (conami == 7) {
-    if (keyName == 'ArrowRight') {
-      conami = 8;
-      return;
-    }
-  } else if (conami == 8) {
-    if (keyName == 'b') {
-      conami = 9;
-      return;
-    }
-  } else if (conami == 9) {
-    if (keyName == 'a') {
-      window.location.reload();
-    }
+  if (order == 0) {
+    // 初回キー押下から3秒間, 入力を受け付ける
+    setTimeout(() => order = 0, 3000);
+  }
+  order = e.key == command[order]
+    ? (order + 1) | 0
+    : 0;
+  // 成功時
+  if (order == command.length) {
+    console.log('おけ')
+    order = 0;
   }
 };

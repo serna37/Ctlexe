@@ -1,28 +1,48 @@
 // ========================================
 // OPEN機能用画面をロード
 // ========================================
-import Forge from '/src/core/Forge.js'
-// import CMD from '/src/component/core/CMD.js'
-import BAT from '/src/component/logic/BAT.js'
+import Forge from '../../core/Forge.js'
+import CMD from '../../core/CMD.js'
+import Fsys from '../../core/Fsys.js'
+
+// exeファイルのあるディレクトリを取得
+const chdir = CMD.cmdSync('chdir').replace(/\r\n/g, '');
+
+// config.json
+const cfDict = JSON.parse(
+  Fsys.read(`${chdir}\\src\\config.json`)
+  .replace(/\r\n/g, ''));
 
 // タイトルを設定
-document.querySelector('#title').innerHTML = '開くフォルダを選択';
+document.querySelector('#title').innerHTML =
+  `${cfDict['link']}を表示しています。\
+  <br>一括で開くフォルダを選択してください。`;
 
-// OPEN対象のフォルダを, Windowsコマンドで取得
-const link_dirs =
- ['a', 'a', 'a', 'a', 'a', 'g'];
-// CMD.cmdSync(BAT.LINK_GET_DIR).split(/\n/).filter(v => v);
+// OPEN対象のフォルダを, configから取得
+const link_dirs = Fsys.dirList(cfDict['link']);
+if (!link_dirs) {
+  // パスが存在しなかった場合
+  Forge.load('contents', 'setting', () => {
+    document.querySelector('#title').innerHTML = 'linkフォルダが存在しませんでした';
+  });
+}
 
 // 押下時イベントを返却する関数
-const func = item => {
+const openFunc = item => {
   return () => {
     document.querySelector('#title').innerHTML = `${item}配下を全開きします`;
     setTimeout(() => {
-      // CMD.cmdParallel(`${BAT.LINK_OPEN} ${item}`);
+      // 選択されたフォルダ配下1階層のファイルを全て、並列で開く
+      let flist = Fsys.fList(`${cfDict['link']}\\${item}`);
+      if (flist) {
+        flist.forEach(f => CMD.cmdParallel(`start "" "${cfDict['link']}\\${item}\\${f}"`));
+      } else {
+        document.querySelector('#title').innerHTML = 'ファイルがありません。';
+      }
       Forge.load('contents', 'home', () => {
         document.querySelector('#console').innerHTML = `OPEN[${item}]実行完了`;
       });
-    }, 1000);
+    }, 500);
   };
 };
 
@@ -40,7 +60,7 @@ const addBtn = (item, i, f) => {
 };
 
 // フォルダ数分だけボタンを表示
-link_dirs.forEach((item, i) => addBtn(item, i, func));
+link_dirs.forEach((item, i) => addBtn(item, i, openFunc));
 
 // ダミーdivと戻るボタン追加
 // ダミーの数は, 5以上の場合「4-(フォルダ数 % 5)個」

@@ -30,7 +30,7 @@ const Profile = {
 
     // === コンポーネントロード中の設定===
     loading: 'loading-id',// 画像id
-    loadingDelay: 0,// 最低再生時間
+    loadingDelay: 2,// 最低再生時間
     fadein: 'fade-in-id',// フェードインアニメid
     fadeinDelay: 0.5,// フェードイン時間
     fadeout: 'fade-out-id',// フェードアウトアニメid
