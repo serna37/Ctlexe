@@ -1,10 +1,10 @@
 // ========================================
 // ホーム画面をロード
 // ========================================
-import Forge from '/src/core/Forge.js'
-import Obsidian from '/src/core/Obsidian.js'
+import Forge from '../../core/Forge.js'
+import Obsidian from '../../core/Obsidian.js'
 // import CMD from '/src/component/core/CMD.js'
-import BAT from '/src/component/logic/BAT.js'
+import BAT from '../logic/BAT.js'
 
 // タイトルを設定
 document.querySelector('#title').innerHTML = ''; // 初期化
@@ -75,8 +75,66 @@ const TODO = {
   name: 'TODO',
   detail: '機能未作成です',
   func: () => {
-    let a = {};
     // sysout('NO FUNCTION');
+    // POST メソッドの実装の例
+// async function postData(url = '', data = {}) {
+  // 既定のオプションには * が付いています
+  // const response = fetch('https://www.google.com/search?q=検索', {
+    // method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    // mode: 'cors', // no-cors, *cors, same-origin
+    // cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+    // credentials: 'same-origin', // include, *same-origin, omit
+    // headers: {
+      // 'Content-Type': 'application/json'
+      // 'Content-Type': 'application/x-www-form-urlencoded',
+    // },
+    // redirect: 'follow', // manual, *follow, error
+    // referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    // body: JSON.stringify(data) // 本文のデータ型は "Content-Type" ヘッダーと一致させる必要があります
+  // })
+  // return response.json(); // JSON のレスポンスをネイティブの JavaScript オブジェクトに解釈
+  // あとでAjaxに切り分けるよ
+  let json = {
+    id: 'test',
+    name: 'aa',
+    do: 'aa'
+  }
+  var url = "https://neras-sta.com/cgi-bin/text.py";
+      var method = "POST";
+      var headers = {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+      };
+      var body = JSON.stringify(json);
+      var mhb = {method, headers, body}
+  fetch(url, mhb)
+  // .then(res => console.log(res.text()))
+  .then(v => {
+    console.log(v)
+    return v
+  })
+  .then(res => res.json())
+  .then(v => {
+    console.log(v)
+    return v
+  })
+  .then(v => console.log(v))
+  // .then(data => JSON.parse(data))
+  // .then(res => console.log(this.responseText))
+  .catch(e => console.log(e));
+
+// 成功
+//   function reqListener () {
+//     // console.log(this)
+//     // console.log(window)
+//   console.log(this.responseText);
+// }
+//   var oReq = new XMLHttpRequest();
+// oReq.addEventListener("load", () => console.log(oReq.responseText));
+// oReq.open("GET", url);
+// oReq.send();
+
+// }
 
 // open
 // フォルダ一覧(ファイル除く)を取得

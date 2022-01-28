@@ -1,7 +1,7 @@
 /* ------------------全体------------------ */
 .bg {
   /* 背景 */
-  background: url("/src/component/img/bg.jpg");
+  background: url("../img/bg.jpg");
   background-size: cover;
   background-position: center;
   opacity: 0.9;
@@ -95,7 +95,7 @@
   /* 文字を縦で中央寄せ */
   line-height: 140px;
   /* 背景/サイズ */
-  background: url("/src/component/img/btn.jpeg");
+  background: url("../img/btn.jpeg");
   width: 150px;
   height: 150px;
   /* 円形に */
