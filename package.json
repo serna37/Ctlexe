@@ -3,7 +3,7 @@
   "version": "0.3.1",
   "main": "src/index.html",
   "window": {
-    "icon": "src/component/img/icon.jpeg",
+    "icon": "src/component/img/icon.png",
     "width": 980,
     "height": 540,
     "transparent": true,

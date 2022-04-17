@@ -21,8 +21,9 @@ let progress = document.querySelector('.progress-bar');
 
 // 作業フォルダをハンドリング
 function handl() {
+  setTitle('ハンドリング開始');
   if (!Fsys.existance(cfDict['bkto'])
-  || !Fsys.existance(cfDict['bkfrom'])) {
+    || !Fsys.existance(cfDict['bkfrom'])) {
     Forge.load('contents', 'home', () => {
       document.querySelector('#console').innerHTML = 'BKフォルダが存在しません, 設定画面から設定してください。';
     });
@@ -36,6 +37,7 @@ let bkFileAllNo = null;
 
 // 実行関数
 function exeBk() {
+  setTitle('処理開始');
   let now = new Date();
   let yyyy = now.getFullYear();
   let mm = now.getMonth() >= 9 ? now.getMonth() + 1 : `0${now.getMonth() + 1}`;
@@ -48,10 +50,10 @@ function exeBk() {
     // ファイル名も考慮
     // 同ヘッダファイルについて
     let sameHeadFile = flist
-    ? flist.concat(dirList).filter(v => v)
-      .filter(v => v.startsWith(cfDict['bkheader'])).sort()
-    : dirList.concat(flist).filter(v => v)
-      .filter(v => v.startsWith(cfDict['bkheader'])).sort();
+      ? flist.concat(dirList).filter(v => v)
+        .filter(v => v.startsWith(cfDict['bkheader'])).sort()
+      : dirList.concat(flist).filter(v => v)
+        .filter(v => v.startsWith(cfDict['bkheader'])).sort();
     if (sameHeadFile.length != 0) {
       // 最新バージョンを取得
       let el = /(.+)_(.+)_(.+)_(.+)_ver(.+)/.exec(sameHeadFile.slice(-1)[0]);
@@ -63,15 +65,22 @@ function exeBk() {
       }
     }
   }
-  bktoDirName = `${cfDict['bkto']}\\${dirname}`
+  setTitle('名前ok');
+  bktoDirName = `${cfDict['bkto']}\\${dirname}`;
   new Promise(resolve => {
     // フォルダ作成
-    Fsys.mkdir(bktoDirName);
+    setTitle('フォルダ作成を開始');
+    let reMkdir = Fsys.mkdir(bktoDirName);
+    setTitle('フォルダ作成完了' + reMkdir);
     resolve();
   })
   .then(() => {
     // 並列でコピー、進捗を監視して圧縮/転送
-    Fsys.robocopy(cfDict['bkfrom'], bktoDirName);
+    setTitle('コピー開始');
+    let resRobocp = Fsys.robocopy(cfDict['bkfrom'], bktoDirName);
+    setTitle('robocopyコマンド 結果' + resRobocp);
+    let asdasd = Fsys.count(cfDict['bkfrom']);
+    setTitle('カウント 結果' + asdasd);
     calcProgress(Fsys.count(cfDict['bkfrom']));
   });
 }
@@ -106,9 +115,23 @@ function calcProgress(bkAll) {
     }))
     // 圧縮/コピーフォルダ削除
     .then(() => new Promise(resolve => {
-      Fsys.compress(bktoDirName);
-      Fsys.delCmd(bktoDirName);
-      setTitle('圧縮完了');
+      let resComp = Fsys.compress(bktoDirName);
+      if (!resComp) {
+        setTitle('圧縮失敗 7zipでリトライ');
+        let resSeven = CMD.cmdSync(`${chdir}\\src\\lib\\7za.exe a ${bktoDirName}.zip ${bktoDirName}`);
+        setTitle(resSeven);
+      }
+      let resDel = Fsys.delCmd(bktoDirName);
+      if (!resDel) {
+        setTitle('BK用にコピーしたファイルを削除できませんでした');
+      }
+      // いずれかに失敗した場合、ここで終了
+      if (!resComp || !resDel) {
+        return;
+      }
+      if (resComp && resDel) {
+        setTitle('圧縮完了');
+      }
       resolve();
     }))
     // 転送しない場合は終了
@@ -145,6 +168,7 @@ function calcProgress(bkAll) {
 }
 
 // ハンドリングして実行
+setTitle('処理を開始します');
 if (handl()) {
   exeBk();
 }

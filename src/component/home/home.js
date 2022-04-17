@@ -111,8 +111,8 @@ const BK = {
     if (!ebkf || !ebkt) {
       Forge.load('contents', 'setting');
     } else {
-      document.querySelector('#title').innerHTML = '準備中...';
-      sysout('準備中...')
+      document.querySelector('#title').innerHTML = 'バックアップ準備中...';
+      // sysout('準備中...')
       Forge.load('contents', 'bk');
     }
   }

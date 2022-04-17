@@ -23,7 +23,14 @@ const Fsys = {
   * @return ファイル数
   */
   count(path) {
-    return CMD.cmdSync(`cd /d "${path}" && dir /S /B | find /c /v ""`);
+    let result = 0;
+    try {
+      result = CMD.cmdSync(`cd /d "${path}" && dir /S /B | find /c /v ""`);
+    } catch(e) {
+      // エラー時は0件の場合
+      result = 0;
+    }
+    return result;
   },
   /**
   * フォルダ名のみ一覧を取得(名前昇順ソート).(同期処理)
@@ -171,18 +178,28 @@ const Fsys = {
   /**
   * 削除(同期処理)
   * @param path 対象パス
-  * @return void
+  * @return true 失敗時false
   */
   delCmd(path) {
-    CMD.cmdSync(`rmdir /s /q ${path}`);
+    try {
+      CMD.cmdSync(`rmdir /s /q ${path}`);
+      return true;
+    } catch(e) {
+      return false;
+    }
   },
   /**
   * 圧縮(同期処理)
   * @param path 対象パス
-  * @return void
+  * @return true 失敗時false
   */
   compress(path) {
-    CMD.cmdSync(`powershell Compress-Archive -Path ${path} -DestinationPath ${path}.zip -Force`);
+    try {
+      CMD.cmdSync(`powershell Compress-Archive -Path ${path} -DestinationPath ${path}.zip -Force`);
+      return true;
+    } catch(e) {
+      return false;
+    }
   },
 };
 export default Fsys;
